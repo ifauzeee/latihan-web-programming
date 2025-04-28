@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Dokumen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #dbeafe 0%, #fef9d7 100%); /* Soft blue to light yellow gradient */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Quicksand', sans-serif;
+      color: #1f2937; /* Dark gray for text */
+      overflow-x: hidden;
+    }
+
+    .form-card {
+      transform: translateY(0);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 1;
+      background: #ffffff;
+    }
+
+    .form-card.loading {
+      transform: translateY(15px);
+      opacity: 0.6;
+    }
+
+    .btn {
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    input[type="file"] {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input[type="file"]:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+    }
+
+    footer {
+      margin-top: auto;
+      background: #eff6ff; /* Light blue footer */
+    }
+
+    header {
+      background: #ffffff;
+      transition: background-color 0.3s ease;
+    }
+
+    .error {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .custom-file-label {
+      display: inline-block;
+      padding: 12px 16px;
+      background-color: #e5e7eb;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .custom-file-label:hover {
+      background-color: #d1d5db;
+      border-color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <header class="w-full shadow-md py-5 px-6 flex items-center justify-between">
+    <button id="back-btn" class="btn px-5 py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+      Kembali
+    </button>
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-blue-600 md:text-4xl">Upload Dokumen</h1>
+      <p class="mt-1 text-gray-600 text-sm md:text-base">Unggah file dokumen (.doc, .docx) dengan mudah!</p>
+    </div>
+    <div class="w-16"></div> <!-- Spacer -->
+  </header>
+
+  <main class="flex-grow flex items-center justify-center px-4 py-10">
+    <form id="upload-form" action="upload.php" method="POST" enctype="multipart/form-data" class="form-card p-8 rounded-2xl shadow-lg max-w-lg w-full">
+      <div class="mb-6">
+        <label for="document" class="custom-file-label w-full text-gray-700">Pilih Dokumen (.doc, .docx)</label>
+        <input type="file" id="document" name="document" accept=".doc,.docx" required class="hidden" />
+        <p id="file-error" class="error">Harap pilih file .doc atau .docx!</p>
+        <p id="file-name" class="text-sm text-gray-600 mt-2"></p>
+      </div>
+      <button type="submit" class="btn w-full px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        Upload
+      </button>
+    </form>
+  </main>
+
+  <footer class="w-full py-4 text-center shadow-inner">
+    <p class="text-gray-600 text-sm">© 2025 Latihan Web Programming - Dibuat Oleh Muhammad Ibnu Fauzi</p>
+  </footer>
+
+  <script>
+    document.getElementById('back-btn').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    const form = document.getElementById('upload-form');
+    const fileInput = document.getElementById('document');
+    const fileNameDisplay = document.getElementById('file-name');
+    const errorDisplay = document.getElementById('file-error');
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        fileNameDisplay.textContent = `File: ${fileInput.files[0].name}`;
+        errorDisplay.style.display = 'none';
+      } else {
+        fileNameDisplay.textContent = '';
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      errorDisplay.style.display = 'none';
+
+      if (!fileInput.files.length) {
+        errorDisplay.textContent = 'Harap pilih file!';
+        errorDisplay.style.display = 'block';
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const validExtensions = ['.doc', '.docx'];
+      const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+
+      if (!validExtensions.includes(fileExtension)) {
+        errorDisplay.textContent = 'File harus berupa .doc atau .docx!';
+        errorDisplay.style.display = 'block';
+        return;
+      }
+
+      form.submit();
+    });
+  </script>
+</body>
+</html>

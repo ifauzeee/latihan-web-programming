@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #dbeafe 0%, #fef9d7 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Quicksand', sans-serif;
+      color: #1f2937;
+      overflow-x: hidden;
+    }
+
+    .form-card {
+      transform: translateY(0);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 1;
+      background: #ffffff;
+    }
+
+    .form-card.loading {
+      transform: translateY(15px);
+      opacity: 0.6;
+    }
+
+    .btn {
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    input {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+    }
+
+    footer {
+      margin-top: auto;
+      background: #eff6ff;
+    }
+
+    header {
+      background: #ffffff;
+      transition: background-color 0.3s ease;
+    }
+
+    .error {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="w-full shadow-md py-5 px-6 flex items-center justify-between">
+    <button id="back-btn" class="btn px-5 py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+      Kembali
+    </button>
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-blue-600 md:text-4xl">Form Validasi Data</h1>
+      <p class="mt-1 text-gray-600 text-sm md:text-base">Isi data dengan lengkap untuk melanjutkan!</p>
+    </div>
+    <div class="w-16"></div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center px-4 py-10">
+    <form id="validation-form" action="submit_form.php" method="POST" class="form-card p-8 rounded-2xl shadow-lg max-w-lg w-full">
+      <div class="mb-4">
+        <input type="text" name="nama" placeholder="Nama" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500" />
+        <p id="nama-error" class="error">Nama harus diisi!</p>
+      </div>
+      <div class="mb-4">
+        <input type="text" name="tempat_tanggal_lahir" placeholder="Tempat, Tanggal Lahir" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500" />
+        <p id="ttl-error" class="error">Tempat dan tanggal lahir harus diisi!</p>
+      </div>
+      <div class="mb-4">
+        <input type="text" name="alamat" placeholder="Alamat" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500" />
+        <p id="alamat-error" class="error">Alamat harus diisi!</p>
+      </div>
+      <div class="mb-4">
+        <input type="text" name="kota" placeholder="Kota" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500" />
+        <p id="kota-error" class="error">Kota harus diisi!</p>
+      </div>
+      <div class="mb-6">
+        <input type="text" name="nomor_kartu_kredit" placeholder="Nomor Kartu Kredit" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500" />
+        <p id="credit-error" class="error">Nomor kartu kredit harus berupa angka!</p>
+      </div>
+      <button type="submit" class="btn w-full px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        Kirim
+      </button>
+    </form>
+  </main>
+
+  <footer class="w-full py-4 text-center shadow-inner">
+    <p class="text-gray-600 text-sm">© 2025 Latihan Web Programming - Dibuat dengan ❤</p>
+  </footer>
+
+  <script>
+    document.getElementById('back-btn').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    const form = document.getElementById('validation-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+
+      const nama = form.querySelector('input[name="nama"]');
+      const ttl = form.querySelector('input[name="tempat_tanggal_lahir"]');
+      const alamat = form.querySelector('input[name="alamat"]');
+      const kota = form.querySelector('input[name="kota"]');
+      const credit = form.querySelector('input[name="nomor_kartu_kredit"]');
+
+      // Reset error messages
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+
+      // Validate inputs
+      if (!nama.value.trim()) {
+        document.getElementById('nama-error').style.display = 'block';
+        isValid = false;
+      }
+      if (!ttl.value.trim()) {
+        document.getElementById('ttl-error').style.display = 'block';
+        isValid = false;
+      }
+      if (!alamat.value.trim()) {
+        document.getElementById('alamat-error').style.display = 'block';
+        isValid = false;
+      }
+      if (!kota.value.trim()) {
+        document.getElementById('kota-error').style.display = 'block';
+        isValid = false;
+      }
+      if (!credit.value.trim() || !/^\d+$/.test(credit.value.trim())) {
+        document.getElementById('credit-error').style.display = 'block';
+        isValid = false;
+      }
+
+      if (isValid) {
+        form.submit();
+      }
+    });
+  </script>
+</body>
+</html>
